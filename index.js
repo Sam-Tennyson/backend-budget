@@ -1,9 +1,17 @@
 // libs
 const mongoose = require('mongoose');
 const express = require('express')
-const app = express()
-const BudgetModel = require("./models/BudgetItem")
 require('dotenv').config()
+
+// routes
+const BudgetRouter = require("./routes/BudgetRoutes");
+const UserRouter = require('./routes/UserRoutes');
+
+// middleware
+const is_authenticated_user = require('./middleware/auth_middleware');
+
+// app
+const app = express()
 
 // variables
 const port = process.env.PORT
@@ -15,70 +23,8 @@ app.get('/test', (req, res) => {
 	res.send('Testing Data Send')
 })
 
-app.post('/budget', async (req, res) => {
-	try {
-		let {budget_cost, budget_item_name} = req.body
-		if (!budget_cost || !budget_item_name) throw new Error("Missing fields are required")
-		let payload_data = {budget_cost, budget_item_name}
-		let data = await BudgetModel.create(payload_data);
-		res.status(201).json({message: "Budget Added Successfully", data})
-	} catch (error) {
-		res.status(500).json({message: error.message})
-	}
-})
-
-app.put('/budget/:id', async (req, res) => {
-	try {
-		let {id} = req.params
-		if (!id) throw new Error("Missing fields are required")
-		const [data] = await Promise.all([
-			BudgetModel.findByIdAndUpdate(id, req.body)
-		])
-		if (!data) throw new Error("Cannot find any budget with this ID")
-		res.status(200).json({message: "Budget Updated Successfully", data})
-	} catch (error) {
-		res.status(500).json({message: error.message})
-	}
-})
-
-app.get('/budget/:id', async (req, res) => {
-	try {
-		let { id } = req.params
-		const [data] = await Promise.all([
-			BudgetModel.findById(id)
-		])
-		console.log(data);
-		if (!data) throw new Error("Cannot find any budget with this ID")
-		res.status(200).json({message: "Fetch Successfully", data})
-	} catch (error) {
-		res.status(500).json({message: error.message})
-	}
-})
-
-app.get('/budget', async (req, res) => {
-	try {
-		const [data] = await Promise.all([
-			BudgetModel.find({})
-		])
-		res.status(201).json({message: "Budget Fetch Successfully", data})
-	} catch (error) {
-		res.status(500).json({message: error.message})
-	}
-})
-
-app.delete('/budget/:id', async (req, res) => {
-	try {
-		let { id } = req.params
-		const [data] = await Promise.all([
-			BudgetModel.findByIdAndDelete(id)
-		])
-		console.log(data);
-		if (!data) throw new Error("Cannot find any budget with this ID")
-		res.status(200).json({message: "Budget Item Deleted Successfully"})
-	} catch (error) {
-		res.status(500).json({message: error.message})
-	}
-})
+app.use("/api/budget", is_authenticated_user, BudgetRouter)
+app.use("/api/auth", UserRouter)
 
 mongoose.connect(MONGO_URL)
 	.then(() => {
