@@ -17,10 +17,11 @@ const register = async (req, res) => {
         // Execute the query using exec() method
         const isUserExists = await isUserExistsQuery.exec();
         if (isUserExists) throw new Error(CONSTANT_DATA.MESSAGES.USER_ALREADY_EXISTS);    
-        let user_data = await RegisterModal.create(newRegisterData);
+        const user_data = await RegisterModal.create(newRegisterData);
+        const token = commonFunctions.encryptJwt({ userId: user_data._id, date: Date.now() });
         res.status(200).json({
-            msg: CONSTANT_DATA.MESSAGES.REGISTRATION_SUCCESS,
-            user_data
+            message: CONSTANT_DATA.MESSAGES.REGISTRATION_SUCCESS,
+            user_data,token
         });
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -40,6 +41,7 @@ const login = async (req, res) => {
         const token = commonFunctions.encryptJwt({ userId: user._id, date: Date.now() });
         res.status(200).json({
             data: user,
+            message: CONSTANT_DATA.MESSAGES.LOGIN_SUCCESS,
             token
         });
     } catch (error) {

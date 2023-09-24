@@ -1,4 +1,4 @@
-const { add_budget, update_budget, getBudgetById, getBudgetData, delete_budget } = require("../controllers/BudgetController");
+const { add_budget, update_budget, getBudgetById, getBudgetData, delete_budget, getBudgetGraphData } = require("../controllers/BudgetController");
 const express = require("express");
 const router = express.Router();
 

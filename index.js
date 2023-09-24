@@ -1,11 +1,13 @@
 // libs
 const mongoose = require('mongoose');
 const express = require('express')
+const cors = require('cors')
 require('dotenv').config()
 
 // routes
 const BudgetRouter = require("./routes/BudgetRoutes");
 const UserRouter = require('./routes/UserRoutes');
+const BudgetGraphRouter = require('./routes/BudgetGraphRoutes');
 
 // middleware
 const is_authenticated_user = require('./middleware/auth_middleware');
@@ -17,6 +19,7 @@ const app = express()
 const port = process.env.PORT
 const MONGO_URL = process.env.MONGO_URL
 
+app.use(cors())
 app.use(express.json())
 
 app.get('/test', (req, res) => {
@@ -24,9 +27,11 @@ app.get('/test', (req, res) => {
 })
 
 app.use("/api/budget", is_authenticated_user, BudgetRouter)
+app.use("/api/budget-graph", is_authenticated_user, BudgetGraphRouter)
 app.use("/api/auth", UserRouter)
 
 mongoose.connect(MONGO_URL)
+// mongoose.connect("mongodb://localhost:27017/budgetController", { useNewUrlParser: true, useUnifiedTopology: true })
 	.then(() => {
 		app.listen(port, () => {
 			console.log(`Server listening on port ${port}`)

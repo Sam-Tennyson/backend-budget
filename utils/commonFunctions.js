@@ -1,6 +1,8 @@
 const BCRYPT = require('bcrypt');
 const JWT = require('jsonwebtoken');
 const CONSTANT_DATA = require('./constants');
+const moment = require('moment/moment');
+const { isDate } = require('moment/moment');
 
 const commonFunctions = {};
 
@@ -39,6 +41,25 @@ commonFunctions.encryptJwt = (payload, expTime = CONSTANT_DATA.SECURITY.EXPIRY_T
  * decrypt jsonwebtoken
  */
 commonFunctions.decryptJwt = (token) => JWT.verify(token, CONSTANT_DATA.SECURITY.JWT_SIGN_KEY, { algorithm: 'HS256' });
+
+/**
+ * Convert ISOstring without time zone eg: T00:00:00Z 
+ */
+commonFunctions.getDateWithoutTimeZone = (date) => moment(date).utcOffset(0, true).format(),
+
+
+commonFunctions.budgetGenerateCurrentMonthArray = ({startDate, endDate}) => {
+  const start_date = startDate; // Start date in ISOString
+  const end_date =  endDate // End date in ISOString
+  let dateArray = [];
+  let currentDatePointer = new Date(start_date);
+  while (currentDatePointer <= new Date(end_date)) {
+    let update_date = commonFunctions.getDateWithoutTimeZone(new Date(currentDatePointer))?.split("T")?.[0] + "T00:00:00Z"
+    dateArray.push({total_budget: null, date: update_date});    
+    currentDatePointer.setDate(currentDatePointer.getDate() + 1);
+  }
+  return dateArray;
+}
 
 
 module.exports = commonFunctions

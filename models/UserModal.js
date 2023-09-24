@@ -25,22 +25,8 @@ const RegisterSchema = new mongoose.Schema(
     }
 )
 
-const LoginSchema = new mongoose.Schema(
-    {
-        email: {
-            type: String,
-            required: true
-        },
-        password: {
-            type: String,
-            required: true
-        }
-    }
-)
-
 const RegisterModal = mongoose.model("RegisterModal", RegisterSchema)
-const LoginModal = mongoose.model("LoginModal", LoginSchema)
 
 module.exports = {
-    RegisterModal, LoginModal
+    RegisterModal
 }

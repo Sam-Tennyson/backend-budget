@@ -17,7 +17,9 @@ CONSTANT_DATA.MESSAGES = {
     REGISTRATION_SUCCESS: "Registration Success",
     NO_USER_FOUND: "No user found",
     INVALID_CREDENTIALS: "Invalid credentials",
-    UNAUTHORIED_ACCESS: "Unauthorized access"
+    UNAUTHORIED_ACCESS: "Unauthorized access",
+    LOGIN_SUCCESS: "Logged-in Successfully",
+    DATE_EXISTED: "Please provide new date",
 }
 
 CONSTANT_DATA.BUDGET = {
