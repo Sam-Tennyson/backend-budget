@@ -35,7 +35,7 @@ commonFunctions.matchMongoId = (id1, id2) => id1.toString() === id2.toString();
  * create jsonwebtoken
  */
 commonFunctions.encryptJwt = (payload, expTime = CONSTANT_DATA.SECURITY.EXPIRY_TIME) => JWT
-  .sign(payload, CONSTANT_DATA.SECURITY.JWT_SIGN_KEY, { algorithm: 'HS256' }, { expiresIn: expTime });
+	.sign(payload, CONSTANT_DATA.SECURITY.JWT_SIGN_KEY, { algorithm: 'HS256' }, { expiresIn: expTime });
 
 /**
  * decrypt jsonwebtoken
@@ -48,17 +48,17 @@ commonFunctions.decryptJwt = (token) => JWT.verify(token, CONSTANT_DATA.SECURITY
 commonFunctions.getDateWithoutTimeZone = (date) => moment(date).utcOffset(0, true).format(),
 
 
-commonFunctions.budgetGenerateCurrentMonthArray = ({startDate, endDate}) => {
-  const start_date = startDate; // Start date in ISOString
-  const end_date =  endDate // End date in ISOString
-  let dateArray = [];
-  let currentDatePointer = new Date(start_date);
-  while (currentDatePointer <= new Date(end_date)) {
-    let update_date = commonFunctions.getDateWithoutTimeZone(new Date(currentDatePointer))?.split("T")?.[0] + "T00:00:00Z"
-    dateArray.push({total_budget: null, date: update_date});    
-    currentDatePointer.setDate(currentDatePointer.getDate() + 1);
-  }
-  return dateArray;
+commonFunctions.budgetGenerateCurrentMonthArray = ({ startDate, endDate }) => {
+	const start_date = startDate; // Start date in ISOString
+	const end_date = endDate // End date in ISOString
+	let dateArray = [];
+	let currentDatePointer = new Date(start_date);
+	while (currentDatePointer <= new Date(end_date)) {
+		let update_date = commonFunctions.getDateWithoutTimeZone(new Date(currentDatePointer))?.split("T")?.[0] + "T00:00:00Z"
+		dateArray.push({ total_budget: null, date: update_date });
+		currentDatePointer.setDate(currentDatePointer.getDate() + 1);
+	}
+	return dateArray;
 }
 
 
