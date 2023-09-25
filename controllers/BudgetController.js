@@ -7,7 +7,7 @@ const add_budget = async (req, res) => {
 	try {
 		let { budget_date, budget_list, total_budget } = req.body
 		if (!budget_list || !total_budget || !budget_date) throw new Error(CONSTANT_DATA.MESSAGES.MISSING_FIELD_REQUIRED)
-		const isDateExistsQuery = BudgetModel.findOne({ budget_date })
+		const isDateExistsQuery = BudgetModel.findOne({_id: req.userId, budget_date })
 
 		// Execute the query using exec() method
 		const isDateExists = await isDateExistsQuery.exec();
