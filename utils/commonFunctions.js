@@ -1,4 +1,6 @@
 const BCRYPT = require('bcrypt');
+const BUFFER = require('buffer');
+if (!BUFFER.SlowBuffer) BUFFER.SlowBuffer = BUFFER.Buffer;
 const JWT = require('jsonwebtoken');
 const CONSTANT_DATA = require('./constants');
 const moment = require('moment/moment');
@@ -35,12 +37,12 @@ commonFunctions.matchMongoId = (id1, id2) => id1.toString() === id2.toString();
  * create jsonwebtoken
  */
 commonFunctions.encryptJwt = (payload, expTime = CONSTANT_DATA.SECURITY.EXPIRY_TIME) => JWT
-	.sign(payload, CONSTANT_DATA.SECURITY.JWT_SIGN_KEY, { algorithm: 'HS256' }, { expiresIn: expTime });
+	.sign(payload, CONSTANT_DATA.SECURITY.JWT_SIGN_KEY, { algorithm: 'HS256', expiresIn: expTime });
 
 /**
  * decrypt jsonwebtoken
  */
-commonFunctions.decryptJwt = (token) => JWT.verify(token, CONSTANT_DATA.SECURITY.JWT_SIGN_KEY, { algorithm: 'HS256' });
+commonFunctions.decryptJwt = (token) => JWT.verify(token, CONSTANT_DATA.SECURITY.JWT_SIGN_KEY, { algorithms: ['HS256'] });
 
 /**
  * Convert ISOstring without time zone eg: T00:00:00Z 
